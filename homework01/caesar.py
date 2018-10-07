@@ -1,4 +1,4 @@
-def encrypt_caesar(plaintext):
+def encrypt_caesar(plaintext, shift):
     """
     Encrypts plaintext using a Caesar cipher.
 
@@ -13,8 +13,8 @@ def encrypt_caesar(plaintext):
     """
     ciphertext = ""
     for char in plaintext:
-    	if "A"<=char<="Z" or "a"<=char<="z":
-    		enc = ord(char) + 3
+    	if "A" <= char <= "Z" or "a" <= char <= "z":
+    		enc = ord(char) + int(shift)
     		if (enc > ord("Z") and enc < ord("a")) or enc > ord("z"):
     			enc -= 26
     		char = chr(enc)
@@ -22,7 +22,7 @@ def encrypt_caesar(plaintext):
     return ciphertext
 
 
-def decrypt_caesar(ciphertext):
+def decrypt_caesar(ciphertext, shift):
     """
     Decrypts a ciphertext using a Caesar cipher.
 
@@ -37,10 +37,11 @@ def decrypt_caesar(ciphertext):
     """
     plaintext = ""
     for char in ciphertext:
-    	if "A"<=char<="Z" or "a"<=char<="z":
-    		enc = ord(char) - 3
+    	if "A" <= char <= "Z" or "a" <= char <= "z":
+    		enc = ord(char) - int(shift)
     		if enc < ord("A") or (enc > ord("Z") and enc < ord("a")):
     			enc += 26
     		char = chr(enc)
     	plaintext += char
     return plaintext
+    

@@ -11,7 +11,14 @@ def encrypt_caesar(plaintext):
     >>> encrypt_caesar("")
     ''
     """
-    # PUT YOUR CODE HERE
+    ciphertext = ""
+    for char in plaintext:
+    	if "A"<=char<="Z" or "a"<=char<="z":
+    		enc = ord(char) + 3
+    		if (enc > ord("Z") and enc < ord("a")) or enc > ord("z"):
+    			enc -= 26
+    			char = chr(enc)
+    	ciphertext += char		
     return ciphertext
 
 

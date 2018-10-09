@@ -11,17 +11,20 @@ def encrypt_vigenere(plaintext, keyword):
     """
     ciphertext = ""
     for i in range(len(plaintext)):
-    	shift = keyword[i % len(keyword)]
-    	if shift <= "Z":
-    		shift = ord(shift) - ord("A")
+    	if "A" <= plaintext[i] <= "Z" or "a" <= plaintext[i] <= "z":
+    		shift = keyword[i % len(keyword)]
+    		if shift <= "Z":
+    			shift = ord(shift) - ord("A")
+    		else:
+    			shift = ord(shift) - ord("a")
+    		symbol = ord(plaintext[i]) + shift
+    		if "A" < plaintext[i] < "Z" and chr(symbol) > "Z":
+    			symbol -= 26
+    		if chr(symbol) > "z":
+    			symbol -= 26
+    		ciphertext += chr(symbol)
     	else:
-    		shift = ord(shift) - ord("a")
-    	symbol = ord(plaintext[i]) + shift
-    	if "A" < plaintext[i] < "Z" and chr(symbol) > "Z":
-    		symbol -= 26
-    	if chr(symbol) > "z":
-    		symbol -= 26
-    	ciphertext += chr(symbol) 
+    		ciphertext += plaintext[i] 
     return ciphertext
 
 
@@ -36,6 +39,20 @@ def decrypt_vigenere(ciphertext, keyword):
     >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
     'ATTACKATDAWN'
     """
-    # PUT YOUR CODE HERE
+    plaintext = ""
+    for i in range(len(ciphertext)):
+    	if "A" <= ciphertext[i] <= "Z" or "a" <= ciphertext[i] <= "z":
+    		shift = keyword[i % len(keyword)]
+    		if shift <= "Z":
+    			shift = ord(shift) - ord("A")
+    		else:
+    			shift = ord(shift) - ord("a")
+    		symbol = ord(ciphertext[i]) - shift
+    		if "a" <= ciphertext[i] <= "z" and symbol < ord("a"):
+    			symbol += 26
+    		elif symbol < ord("A"):
+    			symbol += 26
+    		plaintext += chr(symbol)
+    	else:
+    		plaintext += ciphertext[i]	
     return plaintext
-print(ord("a"))

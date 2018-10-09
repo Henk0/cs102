@@ -8,16 +8,22 @@ def encrypt_caesar(plaintext, shift):
     'sbwkrq'
     >>> encrypt_caesar("Python3.6", 3)
     'Sbwkrq3.6'
+<<<<<<< HEAD
     >>> encrypt_caesar("", 5)
+=======
+    >>> encrypt_caesar("", 3)
+>>>>>>> develop
     ''
     """
     ciphertext = ""
     for char in plaintext:
     	if "A" <= char <= "Z" or "a" <= char <= "z":
-    		enc = ord(char) + int(shift)
-    		if (enc > ord("Z") and enc < ord("a")) or enc > ord("z"):
-    			enc -= 26
-    		char = chr(enc)
+    		symbol = ord(char) + int(shift) % 26
+    		if "A" <= char <= "Z" and chr(symbol) > "Z":
+    			symbol -= 26
+    		elif chr(symbol) > "z":
+    			symbol -=26 
+    		char = chr(symbol)
     	ciphertext += char		
     return ciphertext
 
@@ -32,14 +38,20 @@ def decrypt_caesar(ciphertext, shift):
     'python'
     >>> decrypt_caesar("Sbwkrq3.6", 3)
     'Python3.6'
+<<<<<<< HEAD
     >>> decrypt_caesar("", 5)
+=======
+    >>> decrypt_caesar("", 3)
+>>>>>>> develop
     ''
     """
     plaintext = ""
     for char in ciphertext:
     	if "A" <= char <= "Z" or "a" <= char <= "z":
-    		enc = ord(char) - int(shift)
-    		if enc < ord("A") or (enc > ord("Z") and enc < ord("a")):
+    		enc = ord(char) - int(shift) % 26
+    		if enc < ord("A"):
+    			enc += 26
+    		if "a" <= char <= "z" and enc < ord("a"):
     			enc += 26
     		char = chr(enc)
     	plaintext += char

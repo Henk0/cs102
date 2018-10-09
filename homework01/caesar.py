@@ -8,11 +8,7 @@ def encrypt_caesar(plaintext, shift):
     'sbwkrq'
     >>> encrypt_caesar("Python3.6", 3)
     'Sbwkrq3.6'
-<<<<<<< HEAD
-    >>> encrypt_caesar("", 5)
-=======
     >>> encrypt_caesar("", 3)
->>>>>>> develop
     ''
     """
     ciphertext = ""
@@ -38,11 +34,7 @@ def decrypt_caesar(ciphertext, shift):
     'python'
     >>> decrypt_caesar("Sbwkrq3.6", 3)
     'Python3.6'
-<<<<<<< HEAD
     >>> decrypt_caesar("", 5)
-=======
-    >>> decrypt_caesar("", 3)
->>>>>>> develop
     ''
     """
     plaintext = ""

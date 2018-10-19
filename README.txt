@@ -1,1 +1,1 @@
-First repository
+Andrei Beresnev, K3140

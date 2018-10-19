@@ -13,8 +13,8 @@ def is_prime(n):
     False
     """
     b = True
-    for i in range(2,n):
-    	if n % i == 0: b = False 
+    for i in range(2, n):
+        if n % i == 0: b = False
     return b
 
 
@@ -27,11 +27,11 @@ def gcd(a, b):
     >>> gcd(3, 7)
     1
     """
-    while a!=0 and b!=0:
-    	if a > b:
-        	a = a % b
-    	else:
-        	b = b % a
+    while a != 0 and b != 0:
+        if a > b:
+            a = a % b
+        else:
+            b = b % a
     return a + b
 
 
@@ -43,8 +43,16 @@ def multiplicative_inverse(e, phi):
     >>> multiplicative_inverse(7, 40)
     23
     """
-    
-    pass
+    euclid =[[phi, e, phi % e, phi // e]]
+    while euclid[-1][2] != 0:
+        phi, e = e, euclid[-1][2]
+        euclid.append([phi, e, phi % e, phi // e])
+    euclid[-1].extend([0, 1])
+    for i in range(len(euclid)-2, -1, -1):
+        euclid[i].extend([euclid[i+1][-1], euclid[i+1][-2] - euclid[i+1][-1]*euclid[i][3]])
+    d = euclid[0][-1] % euclid[0][0]
+
+    return d
 
 
 def generate_keypair(p, q):

@@ -114,7 +114,7 @@ def solve(grid):
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
     pos = find_empty_positions(grid)
-    if pos == None:
+    if pos is None:
         return grid
 
     values = find_possible_values(grid, pos)
@@ -124,7 +124,7 @@ def solve(grid):
     for value in values:
         grid[pos[0]][pos[1]] = value
         solution = solve(grid)
-        if solution != None:
+        if solution is not None:
             return solution
 
     grid[pos[0]][pos[1]] = "."
@@ -135,7 +135,21 @@ def solve(grid):
 def check_solution(solution):
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
-    pass
+    for row in range(len(solution)):
+        if set(solution[row]) != set("123456789"):
+            return False
+
+    for col in range(len(solution)):
+        if set(get_col(solution, (0, col))) != set("123456789"):
+            return False
+
+    for row in range(len(solution), 3):
+        for col in range(len(solution), 3):
+            block = set(get_block(solution, (row, col)))
+            if block != set("123456789"):
+                return False
+
+    return True
 
 
 def generate_sudoku(N):
@@ -169,3 +183,5 @@ if __name__ == '__main__':
         display(grid)
         solution = solve(grid)
         display(solution)
+        print(check_solution(solution))
+

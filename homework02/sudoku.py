@@ -1,4 +1,6 @@
 import random
+import multiprocessing
+import time
 
 
 def read_sudoku(filename):
@@ -192,11 +194,19 @@ def generate_sudoku(N):
 
     return grid
 
+def run_solve(fname):
+    grid = read_sudoku(fname)
+    start = time.time()
+    display(grid)
+    solution = solve(grid)
+    display(solution)
+    print("Check: ", check_solution(solution), end='\n\n')
+    end = time.time()
+    print(f'{fname}: {end-start}')
+
+
 
 if __name__ == '__main__':
     for fname in ['puzzle1.txt', 'puzzle2.txt', 'puzzle3.txt']:
-        grid = read_sudoku(fname)
-        display(grid)
-        solution = solve(grid)
-        display(solution)
-        print(check_solution(solution))
+        p = multiprocessing.Process(target=run_solve, args=(fname,))
+        p.start()

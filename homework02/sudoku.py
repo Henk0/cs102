@@ -1,3 +1,6 @@
+import random
+
+
 def read_sudoku(filename):
     """ Прочитать Судоку из указанного файла """
     digits = [c for c in open(filename).read() if c in '123456789.']
@@ -25,7 +28,7 @@ def group(values, n):
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    return [values[i: i+n] for i in range(0, len(values), n)]
+    return [values[i: i + n] for i in range(0, len(values), n)]
 
 
 def get_row(values, pos):
@@ -66,12 +69,13 @@ def get_block(values, pos):
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    block =[]
+    block = []
     block_rown = pos[0] // 3 * 3
     block_coln = pos[1] // 3 * 3
     for row in range(block_rown, block_rown + 3):
         block.extend(values[row][block_coln: block_coln + 3])
     return block
+
 
 def find_empty_positions(grid):
     """ Найти первую свободную позицию в пазле
@@ -90,8 +94,6 @@ def find_empty_positions(grid):
     return None
 
 
-
-
 def find_possible_values(grid, pos):
     """ Вернуть множество возможных значения для указанной позиции
 
@@ -105,6 +107,7 @@ def find_possible_values(grid, pos):
     """
     values = set('123456789')
     return values.difference(set(get_row(grid, pos)), set(get_col(grid, pos)), set(get_block(grid, pos)))
+
 
 def solve(grid):
     """ Решение пазла, заданного в grid
@@ -129,7 +132,6 @@ def solve(grid):
 
     grid[pos[0]][pos[1]] = "."
     return None
-
 
 
 def check_solution(solution):
@@ -174,7 +176,21 @@ def generate_sudoku(N):
     >>> check_solution(solution)
     True
     """
-    pass
+    grid = solve([["."] * 9 for i in range(9)])
+
+    if N > 81:
+        N = 0
+    else:
+        N = 81 - N
+
+    while N != 0:
+        row = random.randint(0, 8)
+        col = random.randint(0, 8)
+        if grid[row][col] != '.':
+            grid[row][col] = '.'
+            N -= 1
+
+    return grid
 
 
 if __name__ == '__main__':
@@ -184,4 +200,3 @@ if __name__ == '__main__':
         solution = solve(grid)
         display(solution)
         print(check_solution(solution))
-

@@ -194,6 +194,7 @@ def generate_sudoku(N):
 
     return grid
 
+
 def run_solve(fname):
     grid = read_sudoku(fname)
     start = time.time()
@@ -203,7 +204,6 @@ def run_solve(fname):
     print("Check: ", check_solution(solution), end='\n\n')
     end = time.time()
     print(f'{fname}: {end-start}')
-
 
 
 if __name__ == '__main__':

@@ -39,7 +39,7 @@ class GameOfLife:
         self.screen.fill(pygame.Color('white'))
 
         # Создание списка клеток
-        self.cell_list()
+        self.cell_list(randomize=True)
 
         running = True
         while running:
@@ -57,7 +57,7 @@ class GameOfLife:
             clock.tick(self.speed)
         pygame.quit()
 
-    def cell_list(self, randomize):
+    def cell_list(self, randomize=False):
         """ Создание списка клеток.
 
         :param randomize: Если True, то создается список клеток, где
@@ -99,7 +99,14 @@ class GameOfLife:
         :return: Одномерный список ячеек, смежных к ячейке cell
         """
         neighbours = []
-        # PUT YOUR CODE HERE
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                h = cell[0] + i
+                w = cell[1] + j
+                if i == 0 and j == 0:
+                    continue
+                if 0 <= w < self.width and 0 <= h < self.height:
+                    neighbours.append((h, w))
         return neighbours
 
     def update_cell_list(self, cell_list):

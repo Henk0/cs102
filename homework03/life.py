@@ -39,7 +39,7 @@ class GameOfLife:
         self.screen.fill(pygame.Color('white'))
 
         # Создание списка клеток
-        self.cell_list(randomize=True)
+        self.clist = self.cell_list(randomize=True)
 
         running = True
         while running:
@@ -64,7 +64,7 @@ class GameOfLife:
         каждая клетка равновероятно может быть живой (1) или мертвой (0).
         :return: Список клеток, представленный в виде матрицы
         """
-        self.clist = []
+        clist = []
         for h in range(self.height // self.cell_size):
             row = []
             for w in range(self.width // self.cell_size):
@@ -72,8 +72,8 @@ class GameOfLife:
                     row.append(random.randint(0, 1))
                 if not randomize:
                     row.append(0)
-            self.clist.append(row)
-        return self.clist
+            clist.append(row)
+        return clist
 
     def draw_cell_list(self, clist):
         """ Отображение списка клеток
@@ -118,6 +118,23 @@ class GameOfLife:
         :param cell_list: Игровое поле, представленное в виде матрицы
         :return: Обновленное игровое поле
         """
-        new_clist = []
-        # PUT YOUR CODE HERE
+        new_clist = cell_list[:]
+        for h in range(self.cell_height):
+            for w in range(self.cell_width):
+                neighbours = self.get_neighbours((h, w))
+                alive_neighbours = 0
+                for i, j in neighbours:
+                    if cell_list[i][j] == 1:
+                        alive_neighbours += 1
+                if cell_list[h][w] == 0:
+                    if alive_neighbours == 3:
+                        new_clist[h][w] = 1
+                    else:
+                        new_clist[h][w] = 0
+                else:
+                    if alive_neighbours == 2 or alive_neighbours == 3:
+                        new_clist[h][w] = 1
+                    else:
+                        new_clist[h][w] = 0
+        self.clist = new_clist
         return self.clist

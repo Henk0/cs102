@@ -130,3 +130,6 @@ class GameOfLife:
                     new_clist[h][w] = 1
         return new_clist
 
+if __name__ == '__main__':
+    game = GameOfLife(320, 240, 20)
+    game.run()

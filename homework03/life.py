@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
+import copy
 
 
 class GameOfLife:
@@ -51,7 +52,7 @@ class GameOfLife:
             # Отображение списка
             self.draw_cell_list(self.clist)
             # Выполнение одного шага игры (обновление состояния ячеек)
-            # PUT YOUR CODE HERE
+            self.clist = self.update_cell_list(self.clist)
 
             pygame.display.flip()
             clock.tick(self.speed)
@@ -105,8 +106,8 @@ class GameOfLife:
                 w = cell[1] + j
                 if i == 0 and j == 0:
                     continue
-                if 0 <= w < self.width and 0 <= h < self.height:
-                    neighbours.append((h, w))
+                if 0 <= w < self.cell_width and 0 <= h < self.cell_height:
+                    neighbours.append(self.clist[h][w])
         return neighbours
 
     def update_cell_list(self, cell_list):
@@ -118,23 +119,14 @@ class GameOfLife:
         :param cell_list: Игровое поле, представленное в виде матрицы
         :return: Обновленное игровое поле
         """
-        new_clist = cell_list[:]
+        new_clist = copy.deepcopy(cell_list)
         for h in range(self.cell_height):
             for w in range(self.cell_width):
                 neighbours = self.get_neighbours((h, w))
-                alive_neighbours = 0
-                for i, j in neighbours:
-                    if cell_list[i][j] == 1:
-                        alive_neighbours += 1
-                if cell_list[h][w] == 0:
-                    if alive_neighbours == 3:
-                        new_clist[h][w] = 1
-                    else:
-                        new_clist[h][w] = 0
-                else:
-                    if alive_neighbours == 2 or alive_neighbours == 3:
-                        new_clist[h][w] = 1
-                    else:
-                        new_clist[h][w] = 0
-        self.clist = new_clist
-        return self.clist
+                alive_neighbours = sum(neighbours)
+                if alive_neighbours != 2 and alive_neighbours != 3:
+                    new_clist[h][w] = 0
+                elif alive_neighbours == 3:
+                    new_clist[h][w] = 1
+        return new_clist
+

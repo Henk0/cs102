@@ -138,11 +138,11 @@ class GameOfLife:
             if cell.is_alive():
                 color_cell = pygame.Color('green')
 
-            rect = Rect(cell.row * self.cell_size+1, cell.col *
-                        self.cell_size+1, self.cell_size-1, self.cell_size-1)
+            rect = Rect(cell.row * self.cell_size + 1, cell.col *
+                        self.cell_size + 1, self.cell_size - 1, self.cell_size - 1)
             pygame.draw.rect(self.screen, color_cell, rect)
 
 
 if __name__ == '__main__':
-    game = GameOfLife(400, 400, 20)
+    game = GameOfLife(560, 400, 20)
     game.run()

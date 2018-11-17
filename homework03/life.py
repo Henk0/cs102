@@ -24,7 +24,6 @@ class GameOfLife:
         self.speed = speed
 
     def draw_grid(self):
-        """ Отрисовать сетку """
         for x in range(0, self.width, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color('black'),
                              (x, 0), (x, self.height))
@@ -33,7 +32,6 @@ class GameOfLife:
                              (0, y), (self.width, y))
 
     def run(self):
-        """ Запустить игру """
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption('Game of Life')
@@ -59,12 +57,6 @@ class GameOfLife:
         pygame.quit()
 
     def cell_list(self, randomize=False):
-        """ Создание списка клеток.
-
-        :param randomize: Если True, то создается список клеток, где
-        каждая клетка равновероятно может быть живой (1) или мертвой (0).
-        :return: Список клеток, представленный в виде матрицы
-        """
         clist = []
         for h in range(self.height // self.cell_size):
             row = []
@@ -77,10 +69,6 @@ class GameOfLife:
         return clist
 
     def draw_cell_list(self, clist):
-        """ Отображение списка клеток
-
-        :param clist: Список клеток для отрисовки, представленный в виде матрицы
-        """
         white = pygame.Color('white')
         green = pygame.Color('green')
         for h in range(len(clist)):
@@ -94,11 +82,6 @@ class GameOfLife:
         pass
 
     def get_neighbours(self, cell):
-        """ Вернуть список соседей для указанной ячейки
-
-        :param cell: Позиция ячейки в сетке, задается кортежем вида (row, col)
-        :return: Одномерный список ячеек, смежных к ячейке cell
-        """
         neighbours = []
         for i in range(-1, 2):
             for j in range(-1, 2):
@@ -111,14 +94,6 @@ class GameOfLife:
         return neighbours
 
     def update_cell_list(self, cell_list):
-        """ Выполнить один шаг игры.
-
-        Обновление всех ячеек происходит одновременно. Функция возвращает
-        новое игровое поле.
-
-        :param cell_list: Игровое поле, представленное в виде матрицы
-        :return: Обновленное игровое поле
-        """
         new_clist = copy.deepcopy(cell_list)
         for h in range(self.cell_height):
             for w in range(self.cell_width):
@@ -129,6 +104,7 @@ class GameOfLife:
                 elif alive_neighbours == 3:
                     new_clist[h][w] = 1
         return new_clist
+
 
 if __name__ == '__main__':
     game = GameOfLife(320, 240, 20)

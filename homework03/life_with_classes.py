@@ -2,11 +2,91 @@ import pygame
 from pygame.locals import *
 import random
 from copy import deepcopy
+from typing import Any, List
+
+
+class Cell:
+    def __init__(self, row: int, col: int, state=False) -> None:
+        self.row = row
+        self.col = col
+        self.state = state
+
+    def is_alive(self) -> Any:
+        return self.state
+
+
+class CellList:
+    def __init__(self, nrows: int, ncols: int, randomize=False) -> None:
+        self.nrows = nrows
+        self.ncols = ncols
+        if randomize:
+            self.grid = [[Cell(i, j, random.randint(0, 1))
+                          for j in range(ncols)] for i in range(nrows)]
+        else:
+            self.grid = [[Cell(i, j) for j in range(ncols)]
+                         for i in range(nrows)]
+
+    def update(self):
+        new_grid = deepcopy(self.grid)
+        for cell in self:
+            neighbours = self.get_neighbours(cell)
+            alive = sum(check.is_alive() for check in neighbours)
+            if alive != 2 and alive != 3:
+                new_grid[cell.row][cell.col].state = False
+            elif alive == 3:
+                new_grid[cell.row][cell.col].state = True
+        self.grid = new_grid
+        return self
+
+    def get_neighbours(self, cell: Cell) -> List[Cell]:
+        neighbours = []
+        x, y = cell.col, cell.row
+        for i in range(y-1, y+2):
+            for j in range(x-1, x+2):
+                if i in range(0, self.nrows) and j in range(0, self.ncols) and (i != y or j != x):
+                    neighbours.append(self.grid[i][j])
+        return neighbours
+
+    @classmethod
+    def from_file(cls, filename: str):
+        fgrid = []
+        with open(filename) as file:
+            for nrow, line in enumerate(file):
+                row = [Cell(nrow, ncol, int(state))
+                       for ncol, state in enumerate(line) if state in "01"]
+                fgrid.append(row)
+        clist = cls(len(fgrid), len(fgrid[0]))
+        clist.grid = fgrid
+        return clist
+
+    def __iter__(self):
+        self.i, self.j = 0, 0
+        return self
+
+    def __next__(self) -> Cell:
+        if self.i == self.nrows:
+            raise StopIteration
+        pos = self.grid[self.i][self.j]
+        self.j += 1
+        if self.j == self.ncols:
+            self.j = 0
+            self.i += 1
+        return pos
+
+    def __str__(self) -> str:
+        str = ''
+        for i in range(self.nrows):
+            for j in range(self.ncols):
+                if self.grid[i][j].state is True:
+                    str += '1'
+                else:
+                    str += '0'
+            str += '\n'
+        return str
 
 
 class GameOfLife:
-
-    def __init__(self, width=640, height=480, cell_size=10, speed=10):
+    def __init__(self, width=400, height=400, cell_size=20, speed=10) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -23,75 +103,46 @@ class GameOfLife:
         # Скорость протекания игры
         self.speed = speed
 
-    def draw_grid(self):
-        """ Отрисовать сетку """
+    def draw_grid(self) -> None:
+        # http://www.pygame.org/docs/ref/draw.html#pygame.draw.line
         for x in range(0, self.width, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('black'),
-                    (x, 0), (x, self.height))
+            pygame.draw.line(self.screen, pygame.Color(
+                'black'), (x, 0), (x, self.height))
         for y in range(0, self.height, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('black'),
-                    (0, y), (self.width, y))
+            pygame.draw.line(self.screen, pygame.Color(
+                'black'), (0, y), (self.width, y))
 
-    def run(self):
-        """ Запустить игру """
+    def run(self) -> None:
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption('Game of Life')
         self.screen.fill(pygame.Color('white'))
-
-        # Создание списка клеток
-        # PUT YOUR CODE HERE
-
+        clist = CellList(self.cell_width, self.cell_height, True)
         running = True
         while running:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     running = False
             self.draw_grid()
-
-            # Отрисовка списка клеток
-            # Выполнение одного шага игры (обновление состояния ячеек)
-            # PUT YOUR CODE HERE
-
+            self.draw_cell_list(clist)
+            clist = CellList.update(clist)
             pygame.display.flip()
             clock.tick(self.speed)
         pygame.quit()
 
+    def draw_cell_list(self, clist: CellList) -> None:
+        for cell in clist:
 
-class Cell:
+            color_cell = pygame.Color('white')
 
-    def __init__(self, row, col, state=False):
-        pass
+            if cell.is_alive():
+                color_cell = pygame.Color('green')
 
-    def is_alive(self):
-        pass
+            rect = Rect(cell.row * self.cell_size+1, cell.col *
+                        self.cell_size+1, self.cell_size-1, self.cell_size-1)
+            pygame.draw.rect(self.screen, color_cell, rect)
 
 
-class CellList:
-
-    def __init__(self, nrows, ncols, randomize=False):
-        pass
-
-    def get_neighbours(self, cell):
-        neighbours = []
-        # PUT YOUR CODE HERE
-        return neighbours
-
-    def update(self):
-        new_clist = deepcopy(self)
-        # PUT YOUR CODE HERE
-        return self
-
-    def __iter__(self):
-        pass
-
-    def __next__(self):
-        pass
-
-    def __str__(self):
-        pass
-
-    @classmethod
-    def from_file(cls, filename):
-        pass
-
+if __name__ == '__main__':
+    game = GameOfLife(400, 400, 20)
+    game.run()

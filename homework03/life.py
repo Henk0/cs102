@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import random
 import copy
+from typing import List, Tuple
 
 
 class GameOfLife:
@@ -56,7 +57,7 @@ class GameOfLife:
             clock.tick(self.speed)
         pygame.quit()
 
-    def cell_list(self, randomize=False):
+    def cell_list(self, randomize=False) -> List[List[int]]:
         clist = []
         for h in range(self.height // self.cell_size):
             row = []
@@ -68,7 +69,7 @@ class GameOfLife:
             clist.append(row)
         return clist
 
-    def draw_cell_list(self, clist):
+    def draw_cell_list(self, clist: List[List[int]]) -> None:
         white = pygame.Color('white')
         green = pygame.Color('green')
         for h in range(len(clist)):
@@ -81,7 +82,7 @@ class GameOfLife:
                     pygame.draw.rect(self.screen, green, [x, y, self.cell_size, self.cell_size])
         pass
 
-    def get_neighbours(self, cell):
+    def get_neighbours(self, cell: Tuple[int, int]) -> List:
         neighbours = []
         for i in range(-1, 2):
             for j in range(-1, 2):
@@ -93,7 +94,7 @@ class GameOfLife:
                     neighbours.append(self.clist[h][w])
         return neighbours
 
-    def update_cell_list(self, cell_list):
+    def update_cell_list(self, cell_list: List) -> List:
         new_clist = copy.deepcopy(cell_list)
         for h in range(self.cell_height):
             for w in range(self.cell_width):

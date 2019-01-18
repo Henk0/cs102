@@ -28,10 +28,7 @@ def count_dates_from_messages(messages: List[Message]) -> Tuple[Dates, Frequenci
 
     :param messages: список сообщений
     """
-    c = Counter()
-    for message in messages:
-        date = fromtimestamp(message.date)
-        c[date] += 1
+    c = Counter(fromtimestamp(message.date) for message in messages)
     result = list(zip(*c.most_common()))
     return tuple((sorted(result[0]), [c[date] for date in sorted(result[0])]))
 

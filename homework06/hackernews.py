@@ -5,6 +5,7 @@ from bottle import (
 from scraputils import get_news
 from db import News, session
 from bayes import NaiveBayesClassifier
+from sqlalchemy.orm import load_only
 
 
 @route("/news")
